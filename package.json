@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/junjie-lean/mid-api-statics#readme",
   "dependencies": {
+    "body-parser": "^1.18.3",
     "express": "^4.16.4",
     "lowdb": "^1.0.0"
   }
