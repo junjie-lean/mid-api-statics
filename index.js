@@ -53,16 +53,40 @@ app.get('/show/all', (req, res) => {
     let data = _.countBy(db.get('rows').value(), 'username');
     // console.log
     let _data = [];
+    let resData = [];
+    let now = new Date();
+    let min = () => {
+        let mini = now.getMinutes() + "";
+        if (mini.length == 1) {
+            return 0
+        } else {
+            return Math.floor(now.getMinutes() / 10) * 10;
+        }
+    }
+    let dateString = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDay()} ${now.getHours()}:${min()}`;
+
     for (let key in data) {
         if (key == 'initial') {
             continue;
         }
-        
-        _data.push({
-            type: key,
-            value: db.get('rows').filter({ username: key }).size().value()
-        })
+        // let value = db.get('rows').filter({ username: key }).size().value();
+
+        let rows = db.get('rows').filter({ username: key }).value();
+
+
+        let limitNowsRows = _.filter(rows, (obj) => {
+            return obj.createTime > (new Date(dateString).getTime())
+        });
+        console.log('====================================');
+        console.log(rows.length, limitNowsRows.length);
+        console.log('====================================');
+        //.size()   
+        _data.push(
+            key,
+        )
     }
+
+    console.log(dateString);
     res.json({
         ..._data
     })
