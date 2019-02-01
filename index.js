@@ -25,9 +25,11 @@ app.get('/', (req, res) => {
 app.get('/random', (req, res) => {
     let arr = ['/api/a', '/api/b', '/api/c', '/api/d', '/api/e'];
 
-    let pushIndex = Math.floor(Math.random() * 5);
-    // console.log(pushIndex);
-    db.random(arr[pushIndex])
+
+    let randomArr = [0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 4];
+    let pushIndex = Math.floor(Math.random() * (randomArr.length - 1));
+    let result = randomArr[pushIndex];
+    db.random(arr[result]);
     res.send('thx visit')
 })
 
@@ -53,42 +55,88 @@ app.get('/show/all', (req, res) => {
     let data = _.countBy(db.get('rows').value(), 'username');
     // console.log
     let _data = [];
-    let resData = [];
     let now = new Date();
     let min = () => {
         let mini = now.getMinutes() + "";
         if (mini.length == 1) {
-            return 0
+            return "00"
         } else {
             return Math.floor(now.getMinutes() / 10) * 10;
         }
     }
-    let dateString = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDay()} ${now.getHours()}:${min()}`;
-
+    let getDate = (time) => {
+        let a = new Date(time);
+        return `${a.getFullYear()}/${a.getMonth() + 1}/${a.getDate()} ${a.getHours()}:${a.getMinutes()}`
+    }
+    /* 距离当前时间最近的分钟整数 */
+    let nowDateString = `${now.getFullYear()}/${now.getMonth() + 1}/${now.getDate()} ${now.getHours()}:${min()}:00`;
     for (let key in data) {
-        if (key == 'initial') {
+        if (key == 'initial' || key == "undefined") {
             continue;
         }
-        // let value = db.get('rows').filter({ username: key }).size().value();
-
         let rows = db.get('rows').filter({ username: key }).value();
-
-
-        let limitNowsRows = _.filter(rows, (obj) => {
-            return obj.createTime > (new Date(dateString).getTime())
-        });
-        console.log('====================================');
-        console.log(rows.length, limitNowsRows.length);
-        console.log('====================================');
-        //.size()   
+        let limitNowsRows = [];
+        let nowDateStringTime = new Date(nowDateString).getTime();
+        let nowDateStringTime_10 = (new Date(nowDateString).getTime()) - (1000 * 60 * 10 * 1);
+        let nowDateStringTime_20 = (new Date(nowDateString).getTime()) - (1000 * 60 * 10 * 2);
+        let nowDateStringTime_30 = (new Date(nowDateString).getTime()) - (1000 * 60 * 10 * 3);
+        let nowDateStringTime_40 = (new Date(nowDateString).getTime()) - (1000 * 60 * 10 * 4);
+        let nowDateStringTime_50 = (new Date(nowDateString).getTime()) - (1000 * 60 * 10 * 5);
+        let nowDateStringTime_60 = (new Date(nowDateString).getTime()) - (1000 * 60 * 10 * 6);
+        let a = [], b = [], c = [], d = [], e = [], f = [];
+        _.find(rows, (obj) => {
+            if (obj.createTime < nowDateStringTime) {
+                limitNowsRows.push(obj);
+            }
+            if (obj.createTime < nowDateStringTime_10) {
+                a.push(obj);
+            }
+            if (obj.createTime < nowDateStringTime_20) {
+                b.push(obj);
+            }
+            if (obj.createTime < nowDateStringTime_30) {
+                c.push(obj);
+            }
+            if (obj.createTime < nowDateStringTime_40) {
+                d.push(obj);
+            }
+            if (obj.createTime < nowDateStringTime_50) {
+                e.push(obj);
+            }
+            if (obj.createTime < nowDateStringTime_60) {
+                f.push(obj);
+            }
+        })
         _data.push(
-            key,
+            {
+                type: key,
+                date: getDate(nowDateStringTime_50),
+                value: e.length - f.length
+            },
+            {
+                type: key,
+                date: getDate(nowDateStringTime_40),
+                value: d.length - e.length
+            },
+            {
+                type: key,
+                date: getDate(nowDateStringTime_30),
+                value: c.length - d.length
+            },
+            {
+                type: key,
+                date: getDate(nowDateStringTime_20),
+                value: b.length - c.length
+            },
+            {
+                type: key,
+                date: getDate(nowDateStringTime_10),
+                value: a.length - b.length
+            }
         )
     }
-
-    console.log(dateString);
     res.json({
-        ..._data
+        data: _data
     })
 })
 

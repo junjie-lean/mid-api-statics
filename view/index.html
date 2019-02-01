@@ -24,6 +24,11 @@
     <script src="https://gw.alipayobjects.com/os/antv/pkg/_antv.g2-3.4.1/dist/g2.min.js"></script>
     <script src="https://gw.alipayobjects.com/os/antv/assets/lib/jquery-3.2.1.min.js"></script>
     <style>
+        #mountNode {
+            width: 1000px;
+            height: 250px;
+        }
+
         .custom-tooltip {
             width: 100% !important;
             height: 10% !important;
@@ -62,57 +67,20 @@
             position: absolute;
             bottom: 0px;
             left: 10px;
-            color: #262626;
-            font-size: 22px;
-            /*font-weight: bold*/
+            color: rgba(0, 0, 0, 0.45);
+            font-size: 14px;
         }
     </style>
     <script>
         $.getJSON('/show/all', (res) => {
             console.log(res)
-            var data = [{
-                date: '2018/8/14 11:00',
-                type: '/api/a',
-                value: 1643
-            }, {
-                date: '2018/8/14 11:00',
-                type: '/api/b',
-                value: 4788
-            }, {
-                date: '2018/8/14 11:00',
-                type: '/api/c',
-                value: 280
-            }, {
-                date: '2018/8/15 12:00',
-                type: '/api/a',
-                value: 2222
-            }, {
-                date: '2018/8/15 12:00',
-                type: '/api/b',
-                value: 3333
-            }, {
-                date: '2018/8/15 12:00',
-                type: '/api/c',
-                value: 444
-            }, {
-                date: '2018/8/15 10:00',
-                type: '/api/a',
-                value: 123
-            }, {
-                date: '2018/8/15 10:00',
-                type: '/api/b',
-                value: 123123
-            }, {
-                date: '2018/8/15 10:00',
-                type: '/api/c',
-                value: 231
-            }];
 
+            let data = res.data;
             var chart = new G2.Chart({
                 container: 'mountNode',
                 forceFit: true,
                 height: window.innerHeight,
-                padding: [100, 20, 30, 45] // 上右下左
+                padding: [100, 20, 30, 145] // 上右下左
             });
             chart.source(data);
             chart.tooltip({
@@ -120,9 +88,11 @@
                 crosshairs: 'y',
                 htmlContent: function htmlContent(title, items) {
                     var alias = {
-                        '/api/a': '/api/a',
-                        '/api/b': '/api/b',
-                        '/api/c': '/api/c'
+                        '/api/a': '接口：/api/a',
+                        '/api/b': '接口：/api/b',
+                        '/api/c': '接口：/api/c',
+                        '/api/d': '接口：/api/d',
+                        '/api/e': '接口：/api/e'
                     };
                     var html = '<div class="custom-tooltip">';
                     for (var i = 0; i < items.length; i++) {
@@ -132,7 +102,7 @@
                         var value = item.value;
                         var domHead = '<div class="custom-tooltip-item" style="border-left-color:' + color + '">';
                         var domName = '<div class="custom-tooltip-item-name">' + name + '</div>';
-                        var domValue = '<div class="custom-tooltip-item-value">' + value + '</div>';
+                        var domValue = '<div class="custom-tooltip-item-value">请求数：' + value + '</div>';
                         var domTail = '</div>';
                         html += domHead + domName + domValue + domTail;
                     }
