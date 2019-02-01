@@ -26,9 +26,10 @@ app.get('/random', (req, res) => {
     let arr = ['/api/a', '/api/b', '/api/c', '/api/d', '/api/e'];
 
 
-    let randomArr = [0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 4];
-    let pushIndex = Math.floor(Math.random() * (randomArr.length - 1));
+    let randomArr = [0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 3, 3, 4];
+    let pushIndex = Math.floor(Math.random() * randomArr.length);
     let result = randomArr[pushIndex];
+    console.log(result)
     db.random(arr[result]);
     res.send('thx visit')
 })
@@ -69,7 +70,7 @@ app.get('/show/all', (req, res) => {
         return `${a.getFullYear()}/${a.getMonth() + 1}/${a.getDate()} ${a.getHours()}:${a.getMinutes()}`
     }
     /* 距离当前时间最近的分钟整数 */
-    let nowDateString = `${now.getFullYear()}/${now.getMonth() + 1}/${now.getDate()} ${now.getHours()}:${min()}:00`;
+    let nowDateString = `${now.getFullYear()}/${now.getMonth() + 1}/${now.getDate()} ${now.getHours()}:${now.getMinutes()}:00`;
     for (let key in data) {
         if (key == 'initial' || key == "undefined") {
             continue;
@@ -77,13 +78,13 @@ app.get('/show/all', (req, res) => {
         let rows = db.get('rows').filter({ username: key }).value();
         let limitNowsRows = [];
         let nowDateStringTime = new Date(nowDateString).getTime();
-        let nowDateStringTime_10 = (new Date(nowDateString).getTime()) - (1000 * 60 * 10 * 1);
-        let nowDateStringTime_20 = (new Date(nowDateString).getTime()) - (1000 * 60 * 10 * 2);
-        let nowDateStringTime_30 = (new Date(nowDateString).getTime()) - (1000 * 60 * 10 * 3);
-        let nowDateStringTime_40 = (new Date(nowDateString).getTime()) - (1000 * 60 * 10 * 4);
-        let nowDateStringTime_50 = (new Date(nowDateString).getTime()) - (1000 * 60 * 10 * 5);
-        let nowDateStringTime_60 = (new Date(nowDateString).getTime()) - (1000 * 60 * 10 * 6);
-        let a = [], b = [], c = [], d = [], e = [], f = [];
+        let nowDateStringTime_10 = (new Date(nowDateString).getTime()) - (1000 * 60 * 1);
+        let nowDateStringTime_20 = (new Date(nowDateString).getTime()) - (1000 * 60 * 2);
+        let nowDateStringTime_30 = (new Date(nowDateString).getTime()) - (1000 * 60 * 3);
+        let nowDateStringTime_40 = (new Date(nowDateString).getTime()) - (1000 * 60 * 4);
+        let nowDateStringTime_50 = (new Date(nowDateString).getTime()) - (1000 * 60 * 5);
+        let nowDateStringTime_60 = (new Date(nowDateString).getTime()) - (1000 * 60 * 6);
+        let a = [], b = [], c = [], d = [], e = [], f = []; 
         _.find(rows, (obj) => {
             if (obj.createTime < nowDateStringTime) {
                 limitNowsRows.push(obj);
