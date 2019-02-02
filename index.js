@@ -29,7 +29,7 @@ app.get('/random', (req, res) => {
     let randomArr = [0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 3, 3, 4];
     let pushIndex = Math.floor(Math.random() * randomArr.length);
     let result = randomArr[pushIndex];
-    console.log(result)
+    // console.log(result)
     db.random(arr[result]);
     res.send(`thx visit${Math.random()}`)
 })
@@ -76,67 +76,50 @@ app.get('/show/all', (req, res) => {
             continue;
         }
         let rows = db.get('rows').filter({ username: key }).value();
-        let limitNowsRows = [];
         let nowDateStringTime = new Date(nowDateString).getTime();
-        let nowDateStringTime_10 = (new Date(nowDateString).getTime()) - (1000 * 60 * 1);
-        let nowDateStringTime_20 = (new Date(nowDateString).getTime()) - (1000 * 60 * 2);
-        let nowDateStringTime_30 = (new Date(nowDateString).getTime()) - (1000 * 60 * 3);
-        let nowDateStringTime_40 = (new Date(nowDateString).getTime()) - (1000 * 60 * 4);
-        let nowDateStringTime_50 = (new Date(nowDateString).getTime()) - (1000 * 60 * 5);
-        let nowDateStringTime_60 = (new Date(nowDateString).getTime()) - (1000 * 60 * 6);
+
         let a = [], b = [], c = [], d = [], e = [], f = [];
+        let oneMinute = 1000 * 60;
+
+        let limitArr = _.filter(rows, (o) => {
+            return o.createTime < nowDateStringTime - oneMinute * 1
+        });
+
         _.find(rows, (obj) => {
-            if (obj.createTime < nowDateStringTime) {
-                limitNowsRows.push(obj);
-            }
-            if (obj.createTime < nowDateStringTime_10) {
+            if (obj.createTime < nowDateStringTime - oneMinute * 1) {
+                //1分钟前的总数
                 a.push(obj);
             }
-            if (obj.createTime < nowDateStringTime_20) {
+            if (obj.createTime < nowDateStringTime - oneMinute * 2) {
+                //2分钟前的总数
                 b.push(obj);
             }
-            if (obj.createTime < nowDateStringTime_30) {
+            if (obj.createTime < nowDateStringTime - oneMinute * 3) {
                 c.push(obj);
             }
-            if (obj.createTime < nowDateStringTime_40) {
+            if (obj.createTime < nowDateStringTime - oneMinute * 4) {
                 d.push(obj);
             }
-            if (obj.createTime < nowDateStringTime_50) {
+            if (obj.createTime < nowDateStringTime - oneMinute * 5) {
                 e.push(obj);
             }
-            if (obj.createTime < nowDateStringTime_60) {
+            if (obj.createTime < nowDateStringTime - oneMinute * 6) {
                 f.push(obj);
             }
         })
-        _data.push(
-            // {
-            //     type: key,
-            //     date: getDate(nowDateStringTime_50),
-            //     value: e.length - f.length
-            // },
-            // {
-            //     type: key,
-            //     date: getDate(nowDateStringTime_40),
-            //     value: d.length - e.length
-            // },
-            // {
-            //     type: key,
-            //     date: getDate(nowDateStringTime_30),
-            //     value: c.length - d.length
-            // },
-            // {
-            //     type: key,
-            //     date: getDate(nowDateStringTime_20),
-            //     value: b.length - c.length
-            // },
-            // {
-            //     type: key,
-            //     date: getDate(nowDateStringTime_10),
-            //     value: a.length - b.length
-            // }
-        )
-
-        
+        _data.push({
+            name: key,
+            // "一分钟前数据": a.length,
+            // "两分钟前数据": b.length,
+            // "三分钟前数据": c.length,
+            // "四分钟前数据": d.length,
+            // "五分钟前数据": e.length,
+            MinuteAgo1: a.length - b.length,
+            MinuteAgo2: b.length - c.length,
+            MinuteAgo3: c.length - d.length,
+            MinuteAgo4: d.length - e.length,
+            MinuteAgo5: e.length - f.length,
+        })
     }
     res.json({
         data: _data
