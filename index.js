@@ -31,7 +31,7 @@ app.get('/random', (req, res) => {
     let result = randomArr[pushIndex];
     console.log(result)
     db.random(arr[result]);
-    res.send('thx visit')
+    res.send(`thx visit${Math.random()}`)
 })
 
 app.get('/getdata', (req, res) => {
@@ -67,7 +67,7 @@ app.get('/show/all', (req, res) => {
     }
     let getDate = (time) => {
         let a = new Date(time);
-        return `${a.getFullYear()}/${a.getMonth() + 1}/${a.getDate()} ${a.getHours()}:${a.getMinutes()}`
+        return `${a.getFullYear()}/${a.getMonth() + 1}/${a.getDate()} ${a.getHours()}:${a.getMinutes()}`;
     }
     /* 距离当前时间最近的分钟整数 */
     let nowDateString = `${now.getFullYear()}/${now.getMonth() + 1}/${now.getDate()} ${now.getHours()}:${now.getMinutes()}:00`;
@@ -84,7 +84,7 @@ app.get('/show/all', (req, res) => {
         let nowDateStringTime_40 = (new Date(nowDateString).getTime()) - (1000 * 60 * 4);
         let nowDateStringTime_50 = (new Date(nowDateString).getTime()) - (1000 * 60 * 5);
         let nowDateStringTime_60 = (new Date(nowDateString).getTime()) - (1000 * 60 * 6);
-        let a = [], b = [], c = [], d = [], e = [], f = []; 
+        let a = [], b = [], c = [], d = [], e = [], f = [];
         _.find(rows, (obj) => {
             if (obj.createTime < nowDateStringTime) {
                 limitNowsRows.push(obj);
@@ -109,32 +109,34 @@ app.get('/show/all', (req, res) => {
             }
         })
         _data.push(
-            {
-                type: key,
-                date: getDate(nowDateStringTime_50),
-                value: e.length - f.length
-            },
-            {
-                type: key,
-                date: getDate(nowDateStringTime_40),
-                value: d.length - e.length
-            },
-            {
-                type: key,
-                date: getDate(nowDateStringTime_30),
-                value: c.length - d.length
-            },
-            {
-                type: key,
-                date: getDate(nowDateStringTime_20),
-                value: b.length - c.length
-            },
-            {
-                type: key,
-                date: getDate(nowDateStringTime_10),
-                value: a.length - b.length
-            }
+            // {
+            //     type: key,
+            //     date: getDate(nowDateStringTime_50),
+            //     value: e.length - f.length
+            // },
+            // {
+            //     type: key,
+            //     date: getDate(nowDateStringTime_40),
+            //     value: d.length - e.length
+            // },
+            // {
+            //     type: key,
+            //     date: getDate(nowDateStringTime_30),
+            //     value: c.length - d.length
+            // },
+            // {
+            //     type: key,
+            //     date: getDate(nowDateStringTime_20),
+            //     value: b.length - c.length
+            // },
+            // {
+            //     type: key,
+            //     date: getDate(nowDateStringTime_10),
+            //     value: a.length - b.length
+            // }
         )
+
+        
     }
     res.json({
         data: _data

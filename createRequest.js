@@ -11,7 +11,7 @@ setInterval(() => {
             process.exit();
         })
         res.on('end', () => {
-            console.log('request end')
+            console.log('request end => ' + Math.random() )
         })
     })
 
