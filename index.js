@@ -121,6 +121,13 @@ app.get('/show/all', (req, res) => {
             MinuteAgo5: e.length - f.length,
         })
     }
+    // let resonData = [];
+    // _data.map(item => {
+
+    //     resonData.push()
+    // })
+
+   
     res.json({
         data: _data
     })
